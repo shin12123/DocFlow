@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocFlow - Автоматизация работы с документами</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div id="particles"></div>
+    
+
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <i class="fas fa-file-alt"></i>
+                <span>DocFlow</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Возможности</a>
+                <a href="#download" class="nav-link">Скачать</a>
+                <a href="#requirements" class="nav-link">Требования</a>
+            </div>
+        </nav>
+    </header>
+
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h1 class="hero-title">
+                <span class="gradient-text">DocFlow</span>
+            </h1>
+            <p class="hero-subtitle">
+                Мощное приложение для автоматизации работы с документами
+            </p>
+            <p class="hero-description">
+                Автоматическое заполнение документов, разделение PDF файлов и конвертация DOCX в PDF - всё в одном приложении
+            </p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary download-btn" onclick="downloadApp()">
+                    <i class="fas fa-download"></i>
+                    Скачать DocFlow.exe
+                    <span class="btn-shine"></span>
+                </button>
+                <button class="btn btn-secondary" onclick="scrollToFeatures()">
+                    <i class="fas fa-info-circle"></i>
+                    Узнать больше
+                </button>
+            </div>
+            <div class="version-info">
+                <span>Версия 1.0 • Windows • Бесплатно • by Ganzina Daniil</span>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="app-preview">
+                <div class="app-window">
+                    <div class="window-header">
+                        <div class="window-controls">
+                            <span class="control minimize"></span>
+                            <span class="control maximize"></span>
+                            <span class="control close1"></span>
+                        </div>
+                        <span class="window-title">DocFlow</span>
+                    </div>
+                    <div class="window-content">
+                        <div class="tab-bar">
+                            <div class="tab active" data-tab="docflow">📄 DocFlow</div>
+                            <div class="tab" data-tab="splitter">📑 PDF Splitter</div>
+                            <div class="tab" data-tab="converter">🔄 PDF Conv</div>
+                        </div>
+                        <div class="app-interface">
+
+                            <div class="tab-content active" id="docflow-content">
+                                <div class="interface-element">
+                                    <div class="element-icon">📋</div>
+                                    <div class="element-text">Автоматическое заполнение документов</div>
+                                </div>
+                                <div class="interface-element">
+                                    <div class="element-icon">📊</div>
+                                    <div class="element-text">Обработка Excel данных</div>
+                                </div>
+                                <div class="interface-element">
+                                    <div class="element-icon">🚀</div>
+                                    <div class="element-text">Генерация документов</div>
+                                </div>
+                            </div>
+                            
+            
+                            <div class="tab-content" id="splitter-content">
+                                <div class="interface-element">
+                                    <div class="element-icon">📄</div>
+                                    <div class="element-text">Загрузка PDF файлов</div>
+                                </div>
+                                <div class="interface-element">
+                                    <div class="element-icon">✂️</div>
+                                    <div class="element-text">Разделение по страницам</div>
+                                </div>
+                                <div class="interface-element">
+                                    <div class="element-icon">📦</div>
+                                    <div class="element-text">Создание ZIP архивов</div>
+                                </div>
+                            </div>
+                            
+                     
+                            <div class="tab-content" id="converter-content">
+                                <div class="interface-element">
+                                    <div class="element-icon">📝</div>
+                                    <div class="element-text">Конвертация DOCX в PDF</div>
+                                </div>
+                                <div class="interface-element">
+                                    <div class="element-icon">🔄</div>
+                                    <div class="element-text">Массовая обработка</div>
+                                </div>
+                                <div class="interface-element">
+                                    <div class="element-icon">📁</div>
+                                    <div class="element-text">Объединение файлов</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="gradient-text">Возможности DocFlow</span>
+            </h2>
+            <p class="section-subtitle">
+                Комплексное решение для всех ваших потребностей в работе с документами
+            </p>
+            
+            <div class="features-grid">
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Автозаполнение документов</h3>
+                    <p>Автоматическое заполнение DOCX шаблонов данными из Excel файлов с настройкой соответствия столбцов</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Загрузка шаблонов DOCX</li>
+                        <li><i class="fas fa-check"></i> Импорт данных из Excel</li>
+                        <li><i class="fas fa-check"></i> Настройка маппинга столбцов</li>
+                        <li><i class="fas fa-check"></i> Массовая генерация документов</li>
+                        <li><i class="fas fa-check"></i> Создание PDF и ZIP архивов</li>
+                    </ul>
+                </div>
+
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <h3>Разделение PDF</h3>
+                    <p>Разделение многостраничных PDF файлов на отдельные документы с автоматическим извлечением номеров</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Разделение по страницам</li>
+                        <li><i class="fas fa-check"></i> Автоматическое именование файлов</li>
+                        <li><i class="fas fa-check"></i> Извлечение номеров инструкций</li>
+                        <li><i class="fas fa-check"></i> Создание ZIP архивов</li>
+                        <li><i class="fas fa-check"></i> Обработка ошибок</li>
+                    </ul>
+                </div>
+
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>Конвертация DOCX в PDF</h3>
+                    <p>Массовая конвертация документов Word в формат PDF с возможностью объединения в один файл</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Массовая конвертация</li>
+                        <li><i class="fas fa-check"></i> Объединение PDF файлов</li>
+                        <li><i class="fas fa-check"></i> Сохранение структуры папок</li>
+                        <li><i class="fas fa-check"></i> Автоматическое архивирование</li>
+                        <li><i class="fas fa-check"></i> Прогресс выполнения</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="download" class="download">
+        <div class="container">
+            <div class="download-content">
+                <div class="download-info">
+                    <h2>Готовы начать?</h2>
+                    <p>Скачайте DocFlow прямо сейчас и автоматизируйте свою работу с документами</p>
+                    
+                    <div class="download-stats">
+                        <div class="stat">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-label">Обработанных документов</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">99%</div>
+                            <div class="stat-label">Точность заполнения</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">50x</div>
+                            <div class="stat-label">Ускорение работы</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="download-box">
+                    <div class="download-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>DocFlow для Windows</h3>
+                    <p>Готовый к использованию исполняемый файл</p>
+                    <div class="file-info">
+                        <span><i class="fas fa-file"></i> DocFlow.exe</span>
+                        <span><i class="fas fa-hdd"></i> ~15 МБ</span>
+                    </div>
+                    <button class="btn btn-primary btn-large download-btn" onclick="downloadApp()">
+                        <i class="fas fa-download"></i>
+                        Скачать сейчас
+                        <span class="btn-shine"></span>
+                    </button>
+                    <p class="download-note">
+                        Бесплатно • Без регистрации • Мгновенная загрузка • Разработано Ganzina Daniil
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="requirements" class="requirements">
+        <div class="container">
+            <h2 class="section-title">Системные требования</h2>
+            
+            <div class="requirements-grid">
+                <div class="requirement-card">
+                    <div class="requirement-icon">
+                        <i class="fab fa-windows"></i>
+                    </div>
+                    <h3>Операционная система</h3>
+                    <p>Windows 7/8/10/11 (32-bit или 64-bit)</p>
+                </div>
+                
+                <div class="requirement-card">
+                    <div class="requirement-icon">
+                        <i class="fas fa-memory"></i>
+                    </div>
+                    <h3>Оперативная память</h3>
+                    <p>Минимум 2 ГБ RAM (рекомендуется 4 ГБ)</p>
+                </div>
+                
+                <div class="requirement-card">
+                    <div class="requirement-icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <h3>Место на диске</h3>
+                    <p>50 МБ свободного места</p>
+                </div>
+                
+                <div class="requirement-card">
+                    <div class="requirement-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Дополнительно</h3>
+                    <p>Microsoft Office для PDF конвертации (опционально)</p>
+                </div>
+            </div>
+            
+            <div class="installation-note">
+                <i class="fas fa-info-circle"></i>
+                <p>Приложение не требует установки. Просто скачайте и запустите DocFlow.exe</p>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-file-alt"></i>
+                    <span>DocFlow</span>
+                </div>
+                <p>Автоматизация работы с документами</p>
+                <div class="developer-info">
+                    <p class="developer-credit">
+                        <i class="fas fa-code"></i>
+                        Разработано <span class="developer-name">Ganzina Daniil</span>
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/shin12123" target="_blank" rel="noopener noreferrer" class="github-link">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                            <div class="link-glow"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-divider"></div>
+                <p class="copyright">
+                    © 2024 DocFlow. Все права защищены.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+
+    <div id="downloadModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-download"></i>
+            </div>
+            <h3>Скачивание начато!</h3>
+            <p>Файл DocFlow.exe загружается на ваш компьютер</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p class="modal-note">Если загрузка не началась автоматически, <a href="./DocFlow.exe" download>нажмите здесь</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
