@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -20,6 +19,12 @@
     --gradient-accent: linear-gradient(135deg, #00ff88 0%, #00cc66 100%);
     --shadow-primary: 0 10px 30px rgba(0, 102, 204, 0.3);
     --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.3);
+    --animation-duration: 0.3s;
+    --transition-duration: 0.3s;
+    --app-preview-width: 400px;
+    --app-preview-height: 500px;
+    --app-preview-rotate-y: -15deg;
+    --app-preview-rotate-x: 5deg;
 }
 
 body {
@@ -88,6 +93,16 @@ body {
 .nav-brand i {
     color: var(--primary-color);
     font-size: 1.8rem;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
 }
 
 .nav-links {
@@ -199,21 +214,29 @@ body {
 
 .app-preview {
     perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .app-window {
-    width: 400px;
-    height: 500px;
+    width: var(--app-preview-width);
+    height: var(--app-preview-height);
     background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
     border-radius: 15px;
     box-shadow: var(--shadow-primary);
     border: 1px solid var(--border-color);
-    transform: rotateY(-15deg) rotateX(5deg);
-    transition: transform 0.3s ease;
+    transform: rotateY(var(--app-preview-rotate-y)) rotateX(var(--app-preview-rotate-x));
+    transition: transform var(--transition-duration) ease;
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 .app-window:hover {
-    transform: rotateY(-10deg) rotateX(2deg) scale(1.05);
+    transform: rotateY(calc(var(--app-preview-rotate-y) * 0.67)) rotateX(calc(var(--app-preview-rotate-x) * 0.4)) scale(1.05);
 }
 
 .window-header {
@@ -224,6 +247,7 @@ body {
     border-bottom: 1px solid var(--border-color);
     border-radius: 15px 15px 0 0;
     background: rgba(45, 45, 45, 0.8);
+    backdrop-filter: blur(10px);
 }
 
 .window-controls {
@@ -250,12 +274,23 @@ body {
 .window-title {
     font-weight: bold;
     color: var(--text-primary);
+    font-size: 0.9rem;
 }
 
 .tab-bar {
     display: flex;
+    justify-content: center;
     background: #2d2d2d;
     padding: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tab-bar::-webkit-scrollbar {
+    display: none;
 }
 
 .tab {
@@ -265,6 +300,15 @@ body {
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.tab-icon {
+    display: none;
 }
 
 .tab.active {
@@ -282,6 +326,7 @@ body {
     flex-direction: column;
     gap: 1rem;
     min-height: 200px;
+    overflow-y: auto;
 }
 
 .tab-content {
@@ -315,6 +360,8 @@ body {
     border-radius: 10px;
     border: 1px solid rgba(0, 102, 204, 0.2);
     transition: transform 0.2s ease;
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .interface-element:hover {
@@ -323,11 +370,13 @@ body {
 
 .element-icon {
     font-size: 1.5rem;
+    flex-shrink: 0;
 }
 
 .element-text {
     font-size: 0.9rem;
     color: var(--text-secondary);
+    line-height: 1.4;
 }
 
 
@@ -397,32 +446,46 @@ body {
 }
 
 .section-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
-    text-align: center;
-    margin-bottom: 3rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+}
+
+.features,
+.download,
+.requirements {
+    padding: 80px 0;
+    position: relative;
 }
 
 .features {
-    padding: 100px 0;
+    padding-top: 2px;
+    padding-bottom: 15px;
+    background: rgba(45, 45, 45, 0.3);
+}
+
+.download {
+    background: var(--bg-darker);
+}
+
+.requirements {
     background: rgba(45, 45, 45, 0.3);
 }
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
     margin-top: 3rem;
 }
 
 .feature-card {
-    background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
     border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 2rem;
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
@@ -463,15 +526,14 @@ body {
 }
 
 .feature-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
     color: var(--text-primary);
 }
 
 .feature-card p {
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
+    margin-bottom: 1rem;
 }
 
 .feature-list {
@@ -480,10 +542,10 @@ body {
 }
 
 .feature-list li {
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
     color: var(--text-secondary);
     font-size: 0.95rem;
     transition: transform 0.2s ease;
@@ -496,11 +558,6 @@ body {
 .feature-list i {
     color: var(--accent-color);
     font-size: 0.8rem;
-}
-
-.download {
-    padding: 100px 0;
-    background: var(--bg-darker);
 }
 
 .download-content {
@@ -600,11 +657,6 @@ body {
     margin-top: 1rem;
     font-size: 0.9rem;
     color: var(--text-muted);
-}
-
-.requirements {
-    padding: 100px 0;
-    background: rgba(45, 45, 45, 0.3);
 }
 
 .requirements-grid {
@@ -939,7 +991,27 @@ body {
     }
 }
 
+@media (max-width: 1200px) {
+    :root {
+        --app-preview-width: 380px;
+        --app-preview-height: 480px;
+        --app-preview-rotate-y: -10deg;
+        --app-preview-rotate-x: 3deg;
+    }
+    
+    .app-window:hover {
+        transform: rotateY(-8deg) rotateX(2deg) scale(1.03);
+    }
+}
+
 @media (max-width: 1024px) {
+    :root {
+        --app-preview-width: 350px;
+        --app-preview-height: 450px;
+        --app-preview-rotate-y: -5deg;
+        --app-preview-rotate-x: 2deg;
+    }
+    
     .hero {
         flex-direction: column;
         text-align: center;
@@ -949,6 +1021,22 @@ body {
     .hero-visual {
         padding-left: 0;
         margin-top: 2rem;
+    }
+    
+    .app-window:hover {
+        transform: rotateY(-3deg) rotateX(1deg) scale(1.02);
+    }
+    
+    .app-interface {
+        padding: 1.5rem;
+    }
+    
+    .interface-element {
+        padding: 0.8rem;
+    }
+    
+    .element-text {
+        font-size: 0.85rem;
     }
     
     .download-content {
@@ -963,6 +1051,13 @@ body {
 }
 
 @media (max-width: 768px) {
+    :root {
+        --app-preview-width: 300px;
+        --app-preview-height: 400px;
+        --app-preview-rotate-y: -3deg;
+        --app-preview-rotate-x: 1deg;
+    }
+    
     .nav {
         padding: 1rem;
     }
@@ -998,17 +1093,156 @@ body {
     }
     
     .app-window {
-        width: 300px;
-        height: 400px;
+        transition: transform 0.2s ease;
+    }
+    
+    .window-header {
+        padding: 0.8rem;
+    }
+    
+    .window-title {
+        font-size: 0.8rem;
+    }
+    
+    .control {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .tab-bar {
+        padding: 0.4rem;
+    }
+    
+    .tab {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+    }
+    
+    .app-interface {
+        padding: 1rem;
+        gap: 0.8rem;
+    }
+    
+    .interface-element {
+        padding: 0.7rem;
+        gap: 0.8rem;
+        transition: all 0.2s ease;
+    }
+    
+    .element-icon {
+        font-size: 1.3rem;
+    }
+    
+    .element-text {
+        font-size: 0.8rem;
     }
     
     .download-stats {
         flex-direction: column;
         gap: 1rem;
     }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .nav-links {
+        display: flex;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2rem;
+        transform: translateY(-120%);
+        transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        border-top: 1px solid var(--border-color);
+        z-index: 1000;
+        gap: 0;
+    }
+
+    .nav-links.mobile-open {
+        transform: translateY(0);
+    }
+    
+    .nav-link {
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-color);
+        width: 100%;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    .nav-link:last-child {
+        border-bottom: none;
+    }
+
+    .nav-link::after {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    :root {
+        --app-preview-width: 280px;
+        --app-preview-height: 380px;
+        --app-preview-rotate-y: -2deg;
+        --app-preview-rotate-x: 0.5deg;
+    }
+    
+    .app-window:hover {
+        transform: rotateY(-1deg) rotateX(0.2deg) scale(1.005);
+    }
+    
+    .window-controls {
+        gap: 0.3rem;
+    }
+    
+    .control {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .tab-bar {
+        padding: 0.3rem;
+    }
+    
+    .tab {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        margin-right: 0.25rem;
+    }
+    
+    .app-interface {
+        padding: 0.8rem;
+        gap: 0.6rem;
+    }
+    
+    .interface-element {
+        padding: 0.6rem;
+        gap: 0.6rem;
+    }
+    
+    .element-icon {
+        font-size: 1.2rem;
+    }
+    
+    .element-text {
+        font-size: 0.75rem;
+    }
 }
 
 @media (max-width: 480px) {
+    :root {
+        --app-preview-width: 260px;
+        --app-preview-height: 350px;
+        --app-preview-rotate-y: 0deg;
+        --app-preview-rotate-x: 0deg;
+    }
+    
     .container {
         padding: 0 15px;
     }
@@ -1030,7 +1264,63 @@ body {
     }
     
     .nav-links {
+        display: flex;
+    }
+    
+    .app-window {
+        border-radius: 12px;
+    }
+    
+    .app-window:hover {
+        transform: scale(1.02);
+    }
+    
+    .window-header {
+        padding: 0.7rem;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .window-title {
+        font-size: 0.75rem;
+    }
+    
+    .control {
+        width: 9px;
+        height: 9px;
+    }
+    
+    .tab-bar {
+        padding: 0.3rem;
+    }
+    
+    .tab {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+        margin-right: 0.25rem;
+        border-radius: 6px;
+    }
+    
+    .tab-icon {
         display: none;
+    }
+    
+    .app-interface {
+        padding: 0.7rem;
+        gap: 0.5rem;
+    }
+    
+    .interface-element {
+        padding: 0.5rem;
+        gap: 0.5rem;
+        border-radius: 8px;
+    }
+    
+    .element-icon {
+        font-size: 1.1rem;
+    }
+    
+    .element-text {
+        font-size: 0.7rem;
     }
     
     .features,
@@ -1050,6 +1340,97 @@ body {
     }
 }
 
+@media (max-width: 360px) {
+    :root {
+        --app-preview-width: 240px;
+        --app-preview-height: 320px;
+    }
+    
+    .window-header {
+        padding: 0.6rem;
+    }
+    
+    .window-title {
+        font-size: 0.7rem;
+    }
+    
+    .control {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .tab {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.65rem;
+        margin-right: 0.2rem;
+    }
+    
+    .app-interface {
+        padding: 0.6rem;
+        gap: 0.4rem;
+    }
+    
+    .interface-element {
+        padding: 0.4rem;
+        gap: 0.4rem;
+    }
+    
+    .element-icon {
+        font-size: 1rem;
+    }
+    
+    .element-text {
+        font-size: 0.65rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-window {
+        transform: none !important;
+    }
+    
+    .app-window:hover {
+        transform: scale(1.02) !important;
+    }
+    
+    .interface-element:hover {
+        transform: none !important;
+    }
+    
+    .btn:hover {
+        transform: none !important;
+    }
+    
+    :root {
+        --animation-duration: 0.1s;
+        --transition-duration: 0.1s;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .app-window {
+        border-width: 0.5px;
+    }
+    
+    .control {
+        border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .app-window {
+        background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+        border-color: #333333;
+    }
+    
+    .window-header {
+        background: rgba(26, 26, 26, 0.9);
+    }
+    
+    .tab-bar {
+        background: #1a1a1a;
+    }
+}
 
 ::-webkit-scrollbar {
     width: 8px;
@@ -1103,4 +1484,151 @@ body {
 @keyframes spin {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Стили для touch-устройств */
+@media (hover: none) and (pointer: coarse) {
+    .app-window:hover {
+        transform: rotateY(var(--app-preview-rotate-y)) rotateX(var(--app-preview-rotate-x)) scale(1.02);
+    }
+    
+    .interface-element:hover {
+        transform: none;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    /* Улучшенные touch-таргеты */
+    .tab {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .control {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn {
+        min-height: 44px;
+    }
+}
+
+/* Улучшенные стили для скролла в tab-bar */
+.tab-bar {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Стили для фокуса для доступности */
+.tab:focus,
+.control:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Стили для загрузки */
+.app-window.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.app-window.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid transparent;
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Стили для landscape ориентации на мобильных */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        padding: 60px 1rem 40px;
+    }
+    
+    .app-window {
+        width: 280px !important;
+        height: 200px !important;
+    }
+    
+    .app-interface {
+        padding: 0.5rem;
+        gap: 0.3rem;
+    }
+    
+    .interface-element {
+        padding: 0.3rem;
+        gap: 0.3rem;
+    }
+    
+    .element-icon {
+        font-size: 1rem;
+    }
+    
+    .element-text {
+        font-size: 0.7rem;
+    }
+}
+
+/* Стили для очень маленьких экранов */
+@media (max-width: 320px) {
+    :root {
+        --app-preview-width: 220px;
+        --app-preview-height: 300px;
+    }
+    
+    .window-header {
+        padding: 0.5rem;
+    }
+    
+    .window-title {
+        font-size: 0.65rem;
+    }
+    
+    .control {
+        width: 7px;
+        height: 7px;
+    }
+    
+    .tab {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.6rem;
+        margin-right: 0.15rem;
+    }
+    
+    .app-interface {
+        padding: 0.5rem;
+        gap: 0.3rem;
+    }
+    
+    .interface-element {
+        padding: 0.3rem;
+        gap: 0.3rem;
+    }
+    
+    .element-icon {
+        font-size: 0.9rem;
+    }
+    
+    .element-text {
+        font-size: 0.6rem;
+    }
 }

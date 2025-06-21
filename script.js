@@ -1,4 +1,3 @@
-
 const downloadButtons = document.querySelectorAll('.download-btn');
 const modal = document.getElementById('downloadModal');
 const closeBtn = document.querySelector('.close');
@@ -109,7 +108,31 @@ function setupParallaxEffect() {
     
     if (!hero || !appWindow) return;
     
+    // Проверяем размер экрана для отключения параллакса на мобильных
+    const isMobile = window.innerWidth <= 768;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Отключаем параллакс для мобильных и touch-устройств
+    if (isMobile || isTouchDevice) {
+        return;
+    }
+    
+    let isHovering = false;
+    
+    hero.addEventListener('mouseenter', () => {
+        isHovering = true;
+    });
+    
+    hero.addEventListener('mouseleave', () => {
+        isHovering = false;
+        // Возвращаем к исходному состоянию с учетом размера экрана
+        const baseTransform = getBaseTransform();
+        appWindow.style.transform = baseTransform;
+    });
+    
     hero.addEventListener('mousemove', (e) => {
+        if (!isHovering) return;
+        
         const rect = hero.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -117,15 +140,35 @@ function setupParallaxEffect() {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
         
-        const rotateX = (y - centerY) / centerY * 10;
-        const rotateY = (centerX - x) / centerX * 15;
+        // Адаптивные значения поворота в зависимости от размера экрана
+        const maxRotateX = window.innerWidth <= 1024 ? 5 : 10;
+        const maxRotateY = window.innerWidth <= 1024 ? 8 : 15;
+        
+        const rotateX = (y - centerY) / centerY * maxRotateX;
+        const rotateY = (centerX - x) / centerX * maxRotateY;
         
         appWindow.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
     });
     
-    hero.addEventListener('mouseleave', () => {
-        appWindow.style.transform = 'rotateX(5deg) rotateY(-15deg) scale(1)';
-    });
+    // Функция для получения базового трансформа в зависимости от размера экрана
+    function getBaseTransform() {
+        if (window.innerWidth <= 480) {
+            return 'none';
+        } else if (window.innerWidth <= 600) {
+            return 'rotateY(-2deg) rotateX(0.5deg)';
+        } else if (window.innerWidth <= 768) {
+            return 'rotateY(-3deg) rotateX(1deg)';
+        } else if (window.innerWidth <= 1024) {
+            return 'rotateY(-5deg) rotateX(2deg)';
+        } else if (window.innerWidth <= 1200) {
+            return 'rotateY(-10deg) rotateX(3deg)';
+        } else {
+            return 'rotateY(-15deg) rotateX(5deg)';
+        }
+    }
+    
+    // Устанавливаем базовый трансформа при загрузке
+    appWindow.style.transform = getBaseTransform();
 }
 
 function animateCounters() {
@@ -356,55 +399,219 @@ function setupAppTabs() {
         tab.addEventListener('click', () => {
             const targetTab = tab.getAttribute('data-tab');
             
-
+            // Убираем активный класс со всех табов
             tabs.forEach(t => t.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
             
-    
+            // Добавляем активный класс к выбранному табу
             tab.classList.add('active');
             
-     
+            // Показываем соответствующий контент
             const targetContent = document.getElementById(`${targetTab}-content`);
             if (targetContent) {
                 targetContent.classList.add('active');
             }
+            
+            // Добавляем анимацию для мобильных устройств
+            if (window.innerWidth <= 768) {
+                targetContent.style.animation = 'fadeInUp 0.3s ease';
+                setTimeout(() => {
+                    targetContent.style.animation = '';
+                }, 300);
+            }
         });
+    });
+    
+    // Автоматическое переключение табов для демонстрации
+    if (window.innerWidth > 768) {
+        let currentTabIndex = 0;
+        const tabInterval = setInterval(() => {
+            if (document.hidden) {
+                clearInterval(tabInterval);
+                return;
+            }
+            
+            currentTabIndex = (currentTabIndex + 1) % tabs.length;
+            tabs[currentTabIndex].click();
+        }, 4000);
+    }
+}
+
+function setupResponsiveAppPreview() {
+    const appWindow = document.querySelector('.app-window');
+    if (!appWindow) return;
+    
+    function updateAppPreview() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const isLandscape = width > height && width <= 768;
+        
+        // Обновляем размеры и трансформацию в зависимости от размера экрана
+        if (width <= 320) {
+            appWindow.style.width = '220px';
+            appWindow.style.height = '300px';
+            appWindow.style.transform = 'none';
+        } else if (width <= 360) {
+            appWindow.style.width = '240px';
+            appWindow.style.height = '320px';
+            appWindow.style.transform = 'none';
+        } else if (width <= 480) {
+            appWindow.style.width = '260px';
+            appWindow.style.height = '350px';
+            appWindow.style.transform = 'none';
+        } else if (width <= 600) {
+            appWindow.style.width = '280px';
+            appWindow.style.height = '380px';
+            appWindow.style.transform = 'rotateY(-2deg) rotateX(0.5deg)';
+        } else if (width <= 768) {
+            if (isLandscape) {
+                appWindow.style.width = '280px';
+                appWindow.style.height = '200px';
+                appWindow.style.transform = 'rotateY(-1deg) rotateX(0.2deg)';
+            } else {
+                appWindow.style.width = '300px';
+                appWindow.style.height = '400px';
+                appWindow.style.transform = 'rotateY(-3deg) rotateX(1deg)';
+            }
+        } else if (width <= 1024) {
+            appWindow.style.width = '350px';
+            appWindow.style.height = '450px';
+            appWindow.style.transform = 'rotateY(-5deg) rotateX(2deg)';
+        } else if (width <= 1200) {
+            appWindow.style.width = '380px';
+            appWindow.style.height = '480px';
+            appWindow.style.transform = 'rotateY(-10deg) rotateX(3deg)';
+        } else {
+            appWindow.style.width = '400px';
+            appWindow.style.height = '500px';
+            appWindow.style.transform = 'rotateY(-15deg) rotateX(5deg)';
+        }
+    }
+    
+    // Обновляем при загрузке и изменении размера окна
+    updateAppPreview();
+    window.addEventListener('resize', updateAppPreview);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(updateAppPreview, 100);
+    });
+    
+    // Добавляем плавную анимацию при изменении размера
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        appWindow.style.transition = 'none';
+        
+        resizeTimeout = setTimeout(() => {
+            appWindow.style.transition = 'transform 0.3s ease';
+            updateAppPreview();
+        }, 100);
     });
 }
 
+function setupTouchSupport() {
+    const appWindow = document.querySelector('.app-window');
+    const tabs = document.querySelectorAll('.tab');
+    
+    if (!appWindow) return;
+    
+    // Добавляем поддержку touch-событий для app-window
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    appWindow.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    });
+    
+    appWindow.addEventListener('touchmove', (e) => {
+        if (window.innerWidth <= 768) return; // Отключаем на мобильных
+        
+        e.preventDefault();
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
+        
+        const deltaX = touchX - touchStartX;
+        const deltaY = touchY - touchStartY;
+        
+        const rotateY = deltaX * 0.1;
+        const rotateX = deltaY * 0.1;
+        
+        appWindow.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(1.02)`;
+    });
+    
+    appWindow.addEventListener('touchend', () => {
+        if (window.innerWidth <= 768) return;
+        
+        setTimeout(() => {
+            const baseTransform = getBaseTransform();
+            appWindow.style.transform = baseTransform;
+        }, 300);
+    });
+    
+    // Улучшенная поддержка touch для табов
+    tabs.forEach(tab => {
+        tab.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            tab.style.transform = 'scale(0.95)';
+        });
+        
+        tab.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            tab.style.transform = 'scale(1)';
+            tab.click();
+        });
+    });
+    
+    function getBaseTransform() {
+        const width = window.innerWidth;
+        if (width <= 480) {
+            return 'none';
+        } else if (width <= 600) {
+            return 'rotateY(-2deg) rotateX(0.5deg)';
+        } else if (width <= 768) {
+            return 'rotateY(-3deg) rotateX(1deg)';
+        } else if (width <= 1024) {
+            return 'rotateY(-5deg) rotateX(2deg)';
+        } else if (width <= 1200) {
+            return 'rotateY(-10deg) rotateX(3deg)';
+        } else {
+            return 'rotateY(-15deg) rotateX(5deg)';
+        }
+    }
+}
 
 function initializeApp() {
-
+    // Основные функции
     setupScrollAnimations();
     setupParallaxEffect();
     setupNavbarScroll();
     setupSmoothNavigation();
     setupKeyboardNavigation();
-    setupAppTabs(); 
+    setupAppTabs();
+    setupResponsiveAppPreview();
+    setupTouchSupport(); // Добавляем поддержку touch
     
-
+    // Создание элементов
     createParticles();
     setupFeatureCards();
     setupMobileMenu();
     
-
+    // Обработчики событий
     document.querySelectorAll('.btn').forEach(btn => {
         btn.addEventListener('click', createRipple);
     });
     
-
     if (closeBtn) {
         closeBtn.addEventListener('click', closeModal);
     }
     
-
     modal?.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();
         }
     });
     
-
+    // Анимация счетчиков
     const statsSection = document.querySelector('.download-stats');
     if (statsSection) {
         const statsObserver = new IntersectionObserver((entries) => {
@@ -419,79 +626,25 @@ function initializeApp() {
         statsObserver.observe(statsSection);
     }
     
-
+    // Дополнительные функции
     setupThemeSwitcher();
     monitorPerformance();
     setupErrorHandling();
+    
+    // Добавляем обработчик для prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.style.setProperty('--animation-duration', '0.1s');
+        document.documentElement.style.setProperty('--transition-duration', '0.1s');
+    }
+    
+    // Добавляем обработчик для изменения ориентации
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            setupResponsiveAppPreview();
+        }, 100);
+    });
 }
 
-
-const mobileMenuStyles = `
-    @media (max-width: 768px) {
-        .mobile-menu-btn {
-            display: block !important;
-        }
-        
-        .nav-links {
-            position: fixed;
-            top: 70px;
-            left: 0;
-            right: 0;
-            background: rgba(10, 10, 10, 0.98);
-            backdrop-filter: blur(20px);
-            flex-direction: column;
-            padding: 2rem;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .nav-links.mobile-open {
-            transform: translateY(0);
-        }
-        
-        .nav-link {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .nav-link:last-child {
-            border-bottom: none;
-        }
-    }
-    
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-    
-    .particle {
-        animation: particleFloat 10s linear infinite;
-    }
-    
-    @keyframes particleFloat {
-        0% {
-            transform: translateY(100vh) rotate(0deg);
-            opacity: 0;
-        }
-        10% {
-            opacity: 1;
-        }
-        90% {
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(-100px) rotate(360deg);
-            opacity: 0;
-        }
-    }
-`;
-
-const styleSheet = document.createElement('style');
-styleSheet.textContent = mobileMenuStyles;
-document.head.appendChild(styleSheet);
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeApp);
